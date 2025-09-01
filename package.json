@@ -1,0 +1,31 @@
+{
+  "name": "backend-extension",
+  "version": "1.0.0",
+  "description": "��#\u0000 \u0000I\u0000n\u0000t\u0000e\u0000r\u0000v\u0000\r\u0000 \u0000",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adhavan13/Interv.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/adhavan13/Interv/issues"
+  },
+  "homepage": "https://github.com/adhavan13/Interv#readme",
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.0.1",
+    "helmet": "^8.1.0",
+    "mongodb": "^6.19.0",
+    "nodemon": "^3.1.10"
+  }
+}
