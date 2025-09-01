@@ -1,16 +1,18 @@
 const { chatWithAI } = require("../services/chat");
 
-async function receiveMessage(req, res) {
+async function chat(req, res) {
   try {
     const { role, content, sessionId } = req.body;
     if (!role || !content || !sessionId) {
       return res.status(400).json({ error: "Missing required fields" });
     }
-    const response = chatWithAI(sessionId, content);
-    res.status(201).json({ message: "Message received successfully" });
+    // console.log("Received message:", { role, content, sessionId });
+    const response = await chatWithAI(sessionId, content);
+    res.status(201).json({ message: response });
   } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
     console.log("Error receiving message:", error);
   }
 }
 
-module.exports = { receiveMessage };
+module.exports = { chat };

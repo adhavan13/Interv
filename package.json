@@ -4,7 +4,7 @@
   "description": "��#\u0000 \u0000I\u0000n\u0000t\u0000e\u0000r\u0000v\u0000\r\u0000 \u0000",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon index.js"
   },
   "repository": {
     "type": "git",
@@ -26,6 +26,7 @@
     "express-rate-limit": "^8.0.1",
     "helmet": "^8.1.0",
     "mongodb": "^6.19.0",
+    "mongoose": "^8.18.0",
     "nodemon": "^3.1.10"
   }
 }

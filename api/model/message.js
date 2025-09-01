@@ -1,5 +1,4 @@
-import mongoose from "mongoose";
-
+const mongoose = require("mongoose");
 const MessageSchema = new mongoose.Schema({
   role: {
     type: String,
@@ -10,11 +9,15 @@ const MessageSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  sessionId: {
+    type: String,
+    required: true,
+  },
   timestamp: {
     type: Date,
     default: Date.now,
   },
 });
 
-const Message = mongoose.model("messages", priviousMessage);
+const Message = mongoose.model("messages", MessageSchema);
 module.exports = Message;

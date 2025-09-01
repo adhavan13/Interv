@@ -7,6 +7,8 @@ const app = express();
 const connectDB = require("./config/mongoDb");
 connectDB();
 
+const chatBotRoutes = require("./routes/chatbotRoutes");
+
 const PORT = process.env.PORT || 3000;
 
 // Security middleware
@@ -26,7 +28,7 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-// app.use("/api/auth", authRoutes);
+app.use("/api/chatbot", chatBotRoutes);
 
 module.exports = app;
 
