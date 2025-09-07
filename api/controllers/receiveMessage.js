@@ -6,7 +6,7 @@ async function chat(req, res) {
     if (!role || !content || !sessionId) {
       return res.status(400).json({ error: "Missing required fields" });
     }
-    console.log("Received message:", { role, content, sessionId });
+    console.log("Received message:", { role, sessionId });
     const response = await chatWithAI(sessionId, content);
     res.status(201).json({ message: response });
   } catch (error) {
