@@ -67,6 +67,8 @@ async function chatWithAI(sessionId, userMessage) {
     const result = await model.generateContent({ contents: messages });
     const aiMessage = result.response.candidates[0].content.parts[0].text;
      
+      
+
     
     // Save AI reply
     await Message.create({
