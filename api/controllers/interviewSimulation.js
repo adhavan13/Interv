@@ -8,7 +8,7 @@ async function simulateInterview(req, res) {
     }
     console.log("Received message:", { role, problemId, content });
     const response = await chatWithAI(problemId, content);
-    res.status(201).json({ message: response });
+    res.status(201).json({ message: response.aiMessage, flag: response.flag });
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });
     console.log("Error receiving message:", error);

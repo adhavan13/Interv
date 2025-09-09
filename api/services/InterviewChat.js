@@ -83,7 +83,7 @@ async function chatWithAI(problemId, userMessage) {
         ],
       });
     }
-    
+
     // Call Gemini API
     console.log("Sending messages to Gemini:", messages);
     const result = await model.generateContent({ contents: messages });
@@ -96,10 +96,11 @@ async function chatWithAI(problemId, userMessage) {
       content: aiMessage,
       timestamp: new Date(),
     });
-
+    let flag = false;
     // If this was a report request, clean up the session data
     if (isReportRequest) {
       // Wait a bit to ensure the final message is saved
+      flag = true;
       setTimeout(async () => {
         try {
           await Message.deleteMany({ problemId: problemId });
@@ -110,7 +111,7 @@ async function chatWithAI(problemId, userMessage) {
       }, 5000); // 5 second delay to ensure final message is saved
     }
 
-    return aiMessage;
+    return { aiMessage, flag };
   } catch (error) {
     console.error("Error in chatWithAI:", error);
     return "Sorry, something went wrong. Please try again later.";
