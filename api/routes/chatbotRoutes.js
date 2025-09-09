@@ -1,7 +1,7 @@
 const express = require("express");
-const { chat } = require("../controllers/receiveMessage");
+const { simulateInterview } = require("../controllers/interviewSimulation");
 const router = express.Router();
 
-router.post("/chat", chat);
+router.post("/chat", simulateInterview);
 
 module.exports = router;

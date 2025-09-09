@@ -5,11 +5,11 @@ const MessageSchema = new mongoose.Schema({
     enum: ["user", "model", "system"], // system optional if you add instructions
     required: true,
   },
-  content: {
+  problemId: {
     type: String,
     required: true,
   },
-  sessionId: {
+  content: {
     type: String,
     required: true,
   },
