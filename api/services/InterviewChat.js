@@ -1,5 +1,6 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const Message = require("../model/message");
+const { findStage } = require("./findStage");
 const SYSTEM_PROMPT = require("../utils/constants").SYSTEM_PROMPT;
 
 // Gemini setup
@@ -14,7 +15,7 @@ async function getHistory(problemId) {
     .exec();
 }
 // Convert MongoDB history to Gemini messages
-function buildMessages(history, currentStage, nextStage) {
+function buildMessages(history) {
   const messages = [
     {
       role: "user", // Gemini doesn’t accept "system" directly
@@ -28,13 +29,15 @@ function buildMessages(history, currentStage, nextStage) {
       parts: [{ text: h.content }],
     });
   });
+
+  const { currentStage, nextStage } = findStage();
   messages.push({
     role: "System", // must be "user" or "model"
     parts: [{ text: currentStage }],
   });
   messages.push({
     role: "System", // must be "user" or "model"
-    parts: [{ text: nextStage }],
+    parts: [{ text: nextStage === null ? "report geneartion" : nextStage }],
   });
   return messages;
 }
