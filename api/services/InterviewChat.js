@@ -15,13 +15,30 @@ async function getHistory(problemId) {
     .exec();
 }
 // Convert MongoDB history to Gemini messages
-function buildMessages(history) {
+async function buildMessages(history, userMessage) {
   const messages = [
     {
-      role: "user", // Gemini doesn’t accept "system" directly
+      role: "User", // Gemini doesn’t accept "system" directly
       parts: [{ text: SYSTEM_PROMPT }],
     },
   ];
+  const { currentStage, nextStage } = await findStage(userMessage);
+
+  messages.push({
+    role: "User", // must be "user" or "model"
+    parts: [{ text: `current stage ${currentStage}` }],
+  });
+  messages.push({
+    role: "User", // must be "user" or "model"
+    parts: [
+      {
+        text:
+          nextStage === null
+            ? "next stage report geneartion"
+            : ` next stage ${nextStage}`,
+      },
+    ],
+  });
 
   history.forEach((h) => {
     messages.push({
@@ -30,15 +47,9 @@ function buildMessages(history) {
     });
   });
 
-  const { currentStage, nextStage } = findStage();
-  messages.push({
-    role: "System", // must be "user" or "model"
-    parts: [{ text: currentStage }],
-  });
-  messages.push({
-    role: "System", // must be "user" or "model"
-    parts: [{ text: nextStage === null ? "report geneartion" : nextStage }],
-  });
+  for (const message of messages) {
+    console.log(`${message.role}: ${message.parts[0].text}`);
+  }
   return messages;
 }
 // Check if message is requesting a report
@@ -61,7 +72,7 @@ async function chatWithAI(problemId, userMessage) {
 
     // Fetch history (some may be summarized now)
     const history = await getHistory(problemId);
-    const messages = buildMessages(history);
+    const messages = await buildMessages(history, userMessage);
 
     const isReportRequest = isRequestingReport(userMessage);
 

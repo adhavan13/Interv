@@ -34,25 +34,18 @@ function findNextStage(currentStage) {
   return null;
 }
 
-async function findStage(problemId, userMessage) {
+async function findStage(userMessage) {
   try {
     const message = buildMessages(userMessage);
     const result = await model.generateContent({ contents: message });
     const currentStage = result.response.candidates[0].content.parts[0].text;
     const nextStage = findNextStage(currentStage);
-
+    console.log(currentStage, nextStage);
     return { currentStage, nextStage };
   } catch (error) {
     console.error("Error in chatWithAI:", error);
     return "Sorry, something went wrong. Please try again later.";
   }
 }
-
-findStage(
-  "",
-  `orting the array and using two pointers might also work.”
-
-“Brute force is O(n²), but I want to optimize.`
-);
 
 module.exports = { findStage };
