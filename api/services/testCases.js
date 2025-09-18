@@ -8,11 +8,12 @@ const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
 // Fetch history for a session
 async function getHistory(problemId) {
-  return await Message.find({ problemId })
+  return await Message.find({ problemId, type: "testcases" })
     .sort({ timestamp: 1 }) // oldest first
     .lean()
     .exec();
 }
+
 // Convert MongoDB history to Gemini messages
 async function buildMessages(history) {
   const messages = [
@@ -62,9 +63,9 @@ async function testCaseAi(problemId, userMessage) {
       timestamp: new Date(),
     });
 
-    return { aiMessage, flag };
+    return { aiMessage };
   } catch (error) {
-    console.error("Error in chatWithAI:", error);
+    console.error("Error in testCaseAi:", error);
     return "Sorry, something went wrong. Please try again later.";
   }
 }

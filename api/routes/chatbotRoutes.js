@@ -4,6 +4,6 @@ const { testCasesSimulator } = require("../controllers/testCases");
 const router = express.Router();
 
 router.post("/chat", simulateInterview);
-router.post("/testcase", testCasesSimulator);
+router.post("/testcases", testCasesSimulator);
 
 module.exports = router;
