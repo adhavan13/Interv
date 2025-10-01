@@ -1,14 +1,14 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const Message = require("../model/message");
-const SYSTEM_PROMPT = require("../utils/constants").TEST_CASES;
+const TEST_CASES = require("../utils/constants").TEST_CASES;
 
 // Gemini setup
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
 // Fetch history for a session
-async function getHistory(problemId) {
-  return await Message.find({ problemId, type: "testcases" })
+async function getHistory(problemId, type) {
+  return await Message.find({ problemId, type })
     .sort({ timestamp: 1 }) // oldest first
     .lean()
     .exec();
@@ -19,7 +19,7 @@ async function buildMessages(history) {
   const messages = [
     {
       role: "User", // Gemini doesn’t accept "system" directly
-      parts: [{ text: SYSTEM_PROMPT }],
+      parts: [{ text: TEST_CASES }],
     },
   ];
 
@@ -33,20 +33,42 @@ async function buildMessages(history) {
   return messages;
 }
 
+// Mark previous history as done
+async function setHistoryDone(type, problemId) {
+  try {
+    const result = await History.updateMany(
+      { type, problemId }, // filter
+      { $set: { status: "done" } } // update
+    );
+
+    console.log(`✅ Updated ${result.modifiedCount} history records as done`);
+    return result;
+  } catch (err) {
+    console.error("❌ Error updating history:", err);
+    throw err;
+  }
+}
+
 // Chat handler
-async function testCaseAi(problemId, userMessage) {
+async function testCaseAi(problemId, userMessage, stage, type) {
   try {
     // Save user message
     await Message.create({
       problemId: problemId,
       role: "user",
-      type: "testcases",
+      type: type,
       content: userMessage,
       timestamp: new Date(),
     });
 
     // Fetch history (some may be summarized now)
-    const history = await getHistory(problemId);
+    let history = [];
+    if (stage === "initial" && type === "testcases") {
+      await setHistoryDone(type, problemId);
+    } else {
+      history = await getHistory(problemId, type);
+    }
+
     const messages = await buildMessages(history);
 
     // Call Gemini API
