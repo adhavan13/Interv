@@ -8,7 +8,7 @@ const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
 // Fetch history for a session
 async function getHistory(problemId, type) {
-  return await Message.find({ problemId, type })
+  return await Message.find({ problemId, type, status: "active" })
     .sort({ timestamp: 1 }) // oldest first
     .lean()
     .exec();
@@ -58,6 +58,7 @@ async function testCaseAi(problemId, userMessage, stage, type) {
       role: "user",
       type: type,
       content: userMessage,
+      status: "active",
       timestamp: new Date(),
     });
 
@@ -82,6 +83,7 @@ async function testCaseAi(problemId, userMessage, stage, type) {
       role: "model",
       type: "testcases",
       content: aiMessage,
+      status: "active",
       timestamp: new Date(),
     });
 
